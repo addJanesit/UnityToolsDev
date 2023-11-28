@@ -11,6 +11,8 @@ using UnityEditor.Animations;
 
 public static class TA_AssetImporterUtility
 {
+    #region Variable
+    
     #region File Prefix
     private const string PREFIX_FBX = "FBX_";
     private const string PREFIX_SKINNEDMESH = "SK_";
@@ -35,17 +37,22 @@ public static class TA_AssetImporterUtility
 
     #region Folder
     private const string FOLDER_RELATIVEASSETS = "Assets";
+    private const string FOLDER_CHARACTER = "Character";
+    private const string FOLDER_ENVIRONMENT = "Environment";
     private const string FOLDER_PLACEHOLDERASSETS = "PlaceHolderAssets";
     private const string FOLDER_MODELS = "Models";
     private const string FOLDER_MATERIALS = "Materials";
     private const string FOLDER_PREFABS = "Prefabs";
+    private const string FOLDER_MODULARPREFABS = "ModularPrefabs";
     private const string FOLDER_TEXTURES = "Textures";
+    private const string FOLDER_VFX = "VFX";
 
     private const string FOLDER_ANIMATION = "Animation";
     private const string FOLDER_ANIMCLIPS = "AnimClips";
     private const string FOLDER_ANIMCONTROLLER = "AnimController";
     private const string FOLDER_ANIMFBX = "AnimFBX";
     private const string FOLDER_AVATAR = "Avatar";
+    private const string FOLDER_SOUNDS = "Sounds";
     #endregion
 
     #region Shader
@@ -63,6 +70,119 @@ public static class TA_AssetImporterUtility
     //TODO Change to row below after Max has setup everythings
     private const string ROOTMOTIONLOCATOR = "SK_Alain_Armature/ROOT/ROOT_Motion_Locator";
     //private const string ROOTMOTIONLOCATOR = "SK_ROOT/S_Armature/ROOT/ROOT_Motion_Locator"; 
+
+    private const string PATH_ARTROOT = FOLDER_RELATIVEASSETS + "/" +"_Steampunk/Art";
+    #endregion
+
+    #region Feature Method
+
+    #region Folder Creation
+    public static void GenerateEnvironmentFolder(string folderToCreateName)
+    {
+        bool folderIsEmpty = folderToCreateName == "" || folderToCreateName == null;
+        if (folderIsEmpty)
+        {
+            Debug.LogError("Folder name is empty, please assign folder name.");
+            return;
+        }
+
+        #region Create root and parent folder
+        string rootPathToCreateFolder = PATH_ARTROOT + "/" + FOLDER_ENVIRONMENT;
+        CheckFolderExistenceAndCreateFolder(rootPathToCreateFolder, PATH_ARTROOT, FOLDER_ENVIRONMENT);
+
+        string pathToCreateFolder = rootPathToCreateFolder + "/" + folderToCreateName;
+        CheckFolderExistenceAndCreateFolder(pathToCreateFolder, rootPathToCreateFolder, folderToCreateName);
+        #endregion
+
+        #region Create Child lv1 Folders
+        string modelFolderPath = pathToCreateFolder + "/" + FOLDER_MODELS;
+        string textureFolderPath = pathToCreateFolder + "/" + FOLDER_TEXTURES;
+        string materialFolderPath = pathToCreateFolder + "/" + FOLDER_MATERIALS;
+        string prefabsFolderPath = pathToCreateFolder + "/" + FOLDER_PREFABS;
+        string modularPrefabFolderPath = pathToCreateFolder + "/" + FOLDER_MODULARPREFABS;
+        string vfxFolderPath = pathToCreateFolder + "/" + FOLDER_VFX;
+
+        CheckFolderExistenceAndCreateFolder(modelFolderPath, pathToCreateFolder, FOLDER_MODELS);
+        CheckFolderExistenceAndCreateFolder(textureFolderPath, pathToCreateFolder, FOLDER_TEXTURES);
+        CheckFolderExistenceAndCreateFolder(materialFolderPath, pathToCreateFolder, FOLDER_MATERIALS);
+        CheckFolderExistenceAndCreateFolder(prefabsFolderPath, pathToCreateFolder, FOLDER_PREFABS);
+        CheckFolderExistenceAndCreateFolder(modularPrefabFolderPath, pathToCreateFolder, FOLDER_MODULARPREFABS);
+        CheckFolderExistenceAndCreateFolder(vfxFolderPath, pathToCreateFolder, FOLDER_VFX);
+        #endregion
+
+        #region Create Child lv2 Folder       
+        string vfxModelsFolderPath = vfxFolderPath + "/" + FOLDER_MODELS;
+        string vfxTexturesFolderPath = vfxFolderPath + "/" + FOLDER_TEXTURES;
+        string vfxMaterialsFolderPath = vfxFolderPath + "/" + FOLDER_MATERIALS;
+        string vfxPrefabsFolderPath = vfxFolderPath + "/" + FOLDER_PREFABS;
+
+        CheckFolderExistenceAndCreateFolder(vfxTexturesFolderPath, vfxFolderPath, FOLDER_TEXTURES);
+        CheckFolderExistenceAndCreateFolder(vfxModelsFolderPath, vfxFolderPath, FOLDER_MODELS);
+        CheckFolderExistenceAndCreateFolder(vfxMaterialsFolderPath, vfxFolderPath, FOLDER_MATERIALS);
+        CheckFolderExistenceAndCreateFolder(vfxPrefabsFolderPath, vfxFolderPath, FOLDER_PREFABS);
+        #endregion
+    }
+
+    public static void GenerateCharacterFolder(string folderToCreateName)
+    {
+        bool folderIsEmpty = folderToCreateName == "" || folderToCreateName == null;
+        if (folderIsEmpty)
+        {
+            Debug.LogError("Folder name is empty, please assign folder name.");
+            return;
+        }
+
+        #region Create root and parent folder
+        string rootPathToCreateFolder = PATH_ARTROOT + "/" + FOLDER_CHARACTER;
+        CheckFolderExistenceAndCreateFolder(rootPathToCreateFolder, PATH_ARTROOT, FOLDER_CHARACTER);
+
+        string pathToCreateFolder = rootPathToCreateFolder + "/" + folderToCreateName;
+        CheckFolderExistenceAndCreateFolder(pathToCreateFolder, rootPathToCreateFolder, folderToCreateName);
+        #endregion
+
+        #region Create child lv1 folder
+        string modelFolderPath = pathToCreateFolder + "/" + FOLDER_MODELS;
+        string textureFolderPath = pathToCreateFolder + "/" + FOLDER_TEXTURES;
+        string materialFolderPath = pathToCreateFolder + "/" + FOLDER_MATERIALS;
+        string prefabsFolderPath = pathToCreateFolder + "/" + FOLDER_PREFABS;
+        string animationFolderPath = pathToCreateFolder + "/" + FOLDER_ANIMATION;
+        string soundFolderPath = pathToCreateFolder + "/" + FOLDER_SOUNDS;
+        string vfxFolderPath = pathToCreateFolder + "/" + FOLDER_VFX;
+
+        CheckFolderExistenceAndCreateFolder(modelFolderPath, pathToCreateFolder, FOLDER_MODELS);
+        CheckFolderExistenceAndCreateFolder(textureFolderPath, pathToCreateFolder, FOLDER_TEXTURES);
+        CheckFolderExistenceAndCreateFolder(materialFolderPath, pathToCreateFolder, FOLDER_MATERIALS);
+        CheckFolderExistenceAndCreateFolder(prefabsFolderPath, pathToCreateFolder, FOLDER_PREFABS);
+        CheckFolderExistenceAndCreateFolder(animationFolderPath, pathToCreateFolder, FOLDER_ANIMATION);
+        CheckFolderExistenceAndCreateFolder(soundFolderPath, pathToCreateFolder, FOLDER_SOUNDS);
+        CheckFolderExistenceAndCreateFolder(vfxFolderPath, pathToCreateFolder, FOLDER_VFX);
+        #endregion
+
+        #region Create child lv2 folder
+        //VFX
+        string vfxModelsFolderPath = vfxFolderPath + "/" + FOLDER_MODELS;
+        string vfxTexturesFolderPath = vfxFolderPath + "/" + FOLDER_TEXTURES;
+        string vfxMaterialsFolderPath = vfxFolderPath + "/" + FOLDER_MATERIALS;
+        string vfxPrefabsFolderPath = vfxFolderPath + "/" + FOLDER_PREFABS;
+
+        CheckFolderExistenceAndCreateFolder(vfxTexturesFolderPath, vfxFolderPath, FOLDER_TEXTURES);
+        CheckFolderExistenceAndCreateFolder(vfxModelsFolderPath, vfxFolderPath, FOLDER_MODELS);
+        CheckFolderExistenceAndCreateFolder(vfxMaterialsFolderPath, vfxFolderPath, FOLDER_MATERIALS);
+        CheckFolderExistenceAndCreateFolder(vfxPrefabsFolderPath, vfxFolderPath, FOLDER_PREFABS);
+
+        //Animation
+        string animClipsFolderPath = animationFolderPath + "/" + FOLDER_ANIMCLIPS;
+        string animControllerFolderPath = animationFolderPath + "/" + FOLDER_ANIMCONTROLLER;
+        string animFBXFolderPath = animationFolderPath + "/" + FOLDER_ANIMFBX;
+        string avatarFolderPath = animationFolderPath + "/" + FOLDER_AVATAR;
+
+        CheckFolderExistenceAndCreateFolder(animClipsFolderPath, animationFolderPath, FOLDER_ANIMCLIPS);
+        CheckFolderExistenceAndCreateFolder(animControllerFolderPath, animationFolderPath, FOLDER_ANIMCONTROLLER);
+        CheckFolderExistenceAndCreateFolder(animFBXFolderPath, animationFolderPath, FOLDER_ANIMFBX);
+        CheckFolderExistenceAndCreateFolder(avatarFolderPath, animationFolderPath, FOLDER_AVATAR);
+        #endregion
+    }
+    #endregion
 
     #region Environment Static Mesh
     public static void GenerateAndSetupEnvironmentStaticMeshFiles(List<ModelImporter> fbx)
@@ -313,6 +433,7 @@ public static class TA_AssetImporterUtility
             //FBX file setup
             originalAnimationFbxFile.animationType = GetAnimationType(originalAnimationFbxFile);
             originalAnimationFbxFile.avatarSetup = ModelImporterAvatarSetup.CreateFromThisModel;
+            //originalAnimationFbxFile.importAnimation = false;
 
             EditorUtility.SetDirty(originalAnimationFbxFile);
             AssetDatabase.ImportAsset(fbxAssetPath, ImportAssetOptions.ForceSynchronousImport);
@@ -490,7 +611,7 @@ public static class TA_AssetImporterUtility
         switch (fbx.animationType)
         {
             case ModelImporterAnimationType.Generic:
-                avatar = AvatarBuilder.BuildGenericAvatar(prefab, "");
+                avatar = AvatarBuilder.BuildGenericAvatar(prefab, ROOTMOTIONLOCATOR);
                 break;
             case ModelImporterAnimationType.Human:
                 HumanDescription humanDescription = originalAvatar.humanDescription;
@@ -655,8 +776,8 @@ public static class TA_AssetImporterUtility
         clipAnimations[0].maskSource = avatarMask;
 
         //Setup Root motion
-        //string rootMotionToSet = ROOTMOTIONLOCATOR;
-        //fbx.motionNodeName = rootMotionToSet;
+        string rootMotionToSet = ROOTMOTIONLOCATOR;
+        fbx.motionNodeName = rootMotionToSet;
     
         #region Name setup
         string prefixName = "A_";
@@ -875,7 +996,9 @@ public static class TA_AssetImporterUtility
 
     #endregion
 
-    #region AssetDataBase Utility
+    #endregion
+
+    #region Utility Method
     public static string ConvertDirectoryPathToRelativePath(string directoryPathToConvert)
     {
         return directoryPathToConvert.Substring(directoryPathToConvert.IndexOf(FOLDER_RELATIVEASSETS));
@@ -896,5 +1019,4 @@ public static class TA_AssetImporterUtility
         }
     }
     #endregion
-
 }

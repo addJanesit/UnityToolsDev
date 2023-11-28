@@ -19,20 +19,26 @@ public class TA_AssetImporterGUI : TA_EditorUtility
 
     public enum AssetImportFeature
     {
-        ST_EnvironmentAsset, SK_CharacterAsset, SK_AnimationAsset
+        FolderCreator, ST_EnvironmentAsset, SK_CharacterAsset, SK_AnimationAsset
+    }
+
+    public enum FolderCreationFeature
+    {
+        ST_EnvironmentAsset, SK_CharacterAsset
     }
 
     #region Variable 
     // Data for working in a scene
     private AssetImportFeature _userFeature;
-    
+    private FolderCreationFeature _userFolderCreationFeature;
+    private string _inputFolderName;
+   
     private GameObject _m_Selected;
     private ModelImporter _m_ModelImporter;
     private List<ModelImporter> _m_ModelImporterList = new List<ModelImporter>();
     private List<Object> _selectedObjects = new List<Object>();
 
     #endregion
-
 
     #region Unity GUI Method
     [MenuItem(_techArtToolsLable + _windowTitle)]
@@ -88,6 +94,9 @@ public class TA_AssetImporterGUI : TA_EditorUtility
     {
         switch (userFeature)
         {
+            case AssetImportFeature.FolderCreator:
+                Draw_FolderCreator();
+                break;
             case AssetImportFeature.ST_EnvironmentAsset:
                 Draw_ImportFeatureEnvironmentStaticMesh();
                 break;
@@ -101,6 +110,29 @@ public class TA_AssetImporterGUI : TA_EditorUtility
     }
     #endregion
 
+    private void Draw_FolderCreator()
+    {
+        GUILayout.Label("Section 2: Choose Folder Type", EditorStyles.whiteLargeLabel);
+        this._userFolderCreationFeature = (FolderCreationFeature)EditorGUILayout.EnumPopup(" Folder Type:", this._userFolderCreationFeature, GUILayout.Width(_elementnWidth));
+        GUILayout.Space(5);
+        this._inputFolderName = EditorGUILayout.TextField("Folder Name: ", this._inputFolderName, GUILayout.Width(_elementnWidth));
+
+        GUILayout.Label("--------------------------------------------------");
+        GUILayout.Space(10);
+
+        if (GUILayout.Button("Generate folder", GUILayout.Width(_elementnWidth), GUILayout.Height(_buttontHeight)))
+        {
+            switch (this._userFolderCreationFeature)
+            {
+                case FolderCreationFeature.ST_EnvironmentAsset:
+                    TA_AssetImporterUtility.GenerateEnvironmentFolder(this._inputFolderName);
+                    break;
+                case FolderCreationFeature.SK_CharacterAsset:
+                    TA_AssetImporterUtility.GenerateCharacterFolder(this._inputFolderName);
+                    break;
+            }
+        }
+    }
     private void Draw_ImportFeatureEnvironmentStaticMesh()
     {
         bool isNotSelectFbxFile = !this._m_Selected;
@@ -128,7 +160,6 @@ public class TA_AssetImporterGUI : TA_EditorUtility
             
         }
     }
-
     private void Draw_ImportFeatureCharacterSkinnedMesh()
     {
         bool isNotSelectFbxFile = !this._m_Selected;
@@ -183,7 +214,6 @@ public class TA_AssetImporterGUI : TA_EditorUtility
             }
         }      
     }
-
     private void Draw_ImportFeatureCharacterAnimation()
     {
         bool isNotSelectFbxFile = !this._m_Selected;
